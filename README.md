@@ -7,12 +7,11 @@
 *   **Lightweight:** The app size is under 10MB.
 *   **Privacy-Friendly:** Use simplytranslate as the backend.
 *   **Clean UI:** A simple interface that anyone can easily use.
-*   **Support 21 commonly used languages:**
+*   **Support 21 commonly used languages:** Chinese (Traditional), Chinese (Simplified), English, Japanese, Korean, French, German, Spanish, Italian, Russian, Portuguese, Vietnamese, Thai, Indonesian, Malay, Arabic, Hindi, Turkish, Ukrainian, Dutch, Polish
     
 ## Screenshots
-<img src="https://github.com/user-attachments/assets/65ce5e52-7a6a-4d0b-9036-50b304d3d8f5" width=20%/>
-<img src="https://github.com/user-attachments/assets/f538e1bc-5832-4407-b420-92d43c4187b3" width=20%/>
-<img src="https://github.com/user-attachments/assets/ef47d233-2063-456f-a029-9ab0b245acd7" width=20%/>
+<img src="https://github.com/user-attachments/assets/5ac3ca84-cc62-44e8-85e9-ed75f97edaa4" width=40%/>
+<img src="https://github.com/user-attachments/assets/a5b839f9-6920-4307-85fa-36373e0fe08d" width=40%/>
 
 
 
