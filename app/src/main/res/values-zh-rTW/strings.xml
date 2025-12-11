@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">翻譯</string>
+    <string name="input_placeholder">請輸入文字...</string>
+    <string name="action_clear">清除</string>
+    <string name="action_paste">貼上</string>
+    <string name="action_copy">複製譯文</string>
+    <string name="hint_copy_long_press">長按以複製</string>
+    <string name="translation_empty">翻譯結果將顯示於此</string>
+    <string name="error_connection">連線錯誤</string>
+    <string name="clipboard_empty">剪貼簿是空的</string>
+    <string name="copied">已複製</string>
+    <!-- 原文/譯文 標籤 -->
+    <string name="label_source">原文</string>
+    <string name="label_target">譯文</string>
+    <string name="lang_detect">偵測語言</string>
+    <!-- 語言名稱 -->
+    <string name="lang_zh_tw">中文 (繁體)</string>
+    <string name="lang_zh_cn">中文 (簡體)</string>
+    <string name="lang_en">英語</string>
+    <string name="lang_ja">日語</string>
+    <string name="lang_ko">韓語</string>
+    <string name="lang_fr">法語</string>
+    <string name="lang_de">德語</string>
+    <string name="lang_es">西班牙語</string>
+    <string name="lang_it">義大利語</string>
+    <string name="lang_ru">俄語</string>
+    <string name="lang_pt">葡萄牙語</string>
+    <string name="lang_vi">越南語</string>
+    <string name="lang_th">泰語</string>
+    <string name="lang_id">印尼語</string>
+    <string name="lang_ms">馬來語</string>
+    <string name="lang_ar">阿拉伯語</string>
+    <string name="lang_hi">印地語</string>
+    <string name="lang_tr">土耳其語</string>
+    <string name="lang_uk">烏克蘭語</string>
+    <string name="lang_nl">荷蘭語</string>
+    <string name="lang_pl">波蘭語</string>
+</resources>

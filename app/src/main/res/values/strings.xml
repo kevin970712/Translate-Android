@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">Translate</string>
+    <string name="input_placeholder">Enter text...</string>
+
+    <!-- Actions -->
+    <string name="action_clear">Clear</string>
+    <string name="action_paste">Paste</string>
+    <string name="action_copy">Copy</string>
+
+    <!-- Hints & Status -->
+    <string name="hint_copy_long_press">Long press to copy</string>
+    <string name="translation_empty">Translation will appear here</string>
+    <string name="error_connection">Connection error</string>
+    <string name="clipboard_empty">Clipboard is empty</string>
+    <string name="copied">Copied</string>
+
+    <!-- Labels -->
+    <string name="label_source">Original</string>
+    <string name="label_target">Translation</string>
+    <string name="lang_detect">Auto</string>
+
+    <!-- Language Names -->
+    <string name="lang_zh_tw">Chinese(Traditional)</string>
+    <string name="lang_zh_cn">Chinese</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ja">Japanese</string>
+    <string name="lang_ko">Korean</string>
+    <string name="lang_fr">French</string>
+    <string name="lang_de">German</string>
+    <string name="lang_es">Spanish</string>
+    <string name="lang_it">Italian</string>
+    <string name="lang_ru">Russian</string>
+    <string name="lang_pt">Portuguese</string>
+    <string name="lang_vi">Vietnamese</string>
+    <string name="lang_th">Thai</string>
+    <string name="lang_id">Indonesian</string>
+    <string name="lang_ms">Malay</string>
+    <string name="lang_ar">Arabic</string>
+    <string name="lang_hi">Hindi</string>
+    <string name="lang_tr">Turkish</string>
+    <string name="lang_uk">Ukrainian</string>
+    <string name="lang_nl">Dutch</string>
+    <string name="lang_pl">Polish</string>
+</resources>

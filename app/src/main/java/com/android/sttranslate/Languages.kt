@@ -1,0 +1,25 @@
+package com.android.sttranslate
+val SUPPORTED_LANGUAGES: Map<String, Int> = mapOf(
+    "auto" to R.string.lang_detect,
+    "zh-TW" to R.string.lang_zh_tw,
+    "zh-CN" to R.string.lang_zh_cn,
+    "en" to R.string.lang_en,
+    "ja" to R.string.lang_ja,
+    "ko" to R.string.lang_ko,
+    "fr" to R.string.lang_fr,
+    "de" to R.string.lang_de,
+    "es" to R.string.lang_es,
+    "it" to R.string.lang_it,
+    "ru" to R.string.lang_ru,
+    "pt" to R.string.lang_pt,
+    "vi" to R.string.lang_vi,
+    "th" to R.string.lang_th,
+    "id" to R.string.lang_id,
+    "ms" to R.string.lang_ms,
+    "ar" to R.string.lang_ar,
+    "hi" to R.string.lang_hi,
+    "tr" to R.string.lang_tr,
+    "uk" to R.string.lang_uk,
+    "nl" to R.string.lang_nl,
+    "pl" to R.string.lang_pl
+)
