@@ -111,8 +111,9 @@ fun TranslateDialogCard(
     onClose: () -> Unit,
 ) {
     // 狀態
-    var sourceLangCode by remember { mutableStateOf("auto") }
-    var targetLangCode by remember { mutableStateOf("zh-TW") }
+    val context = LocalContext.current
+    var sourceLangCode by remember { mutableStateOf(LanguagePreferences.getSourceLanguage(context)) }
+    var targetLangCode by remember { mutableStateOf(LanguagePreferences.getTargetLanguage(context)) }
     var resultText by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(true) }
 
@@ -121,7 +122,6 @@ fun TranslateDialogCard(
     var isTargetMenuExpanded by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
 
     // 翻譯邏輯
@@ -217,7 +217,7 @@ fun TranslateDialogCard(
                             SUPPORTED_LANGUAGES.forEach { (code, nameResId) ->
                                 DropdownMenuItem(
                                     text = { Text(stringResource(nameResId)) },
-                                    onClick = { sourceLangCode = code; isSourceMenuExpanded = false; doTranslate(sourceLangCode, targetLangCode) }
+                                    onClick = { sourceLangCode = code; isSourceMenuExpanded = false; LanguagePreferences.saveSourceLanguage(context, code); doTranslate(sourceLangCode, targetLangCode) }
                                 )
                             }
                         }
@@ -233,6 +233,8 @@ fun TranslateDialogCard(
                                 } else {
                                     val temp = sourceLangCode; sourceLangCode = targetLangCode; targetLangCode = temp
                                 }
+                                LanguagePreferences.saveSourceLanguage(context, sourceLangCode)
+                                LanguagePreferences.saveTargetLanguage(context, targetLangCode)
                                 doTranslate(sourceLangCode, targetLangCode)
                             }
                         ) {
@@ -309,7 +311,7 @@ fun TranslateDialogCard(
                                 if (code == "auto") return@forEach
                                 DropdownMenuItem(
                                     text = { Text(stringResource(nameResId)) },
-                                    onClick = { targetLangCode = code; isTargetMenuExpanded = false; doTranslate(sourceLangCode, targetLangCode) }
+                                    onClick = { targetLangCode = code; isTargetMenuExpanded = false; LanguagePreferences.saveTargetLanguage(context, code); doTranslate(sourceLangCode, targetLangCode) }
                                 )
                             }
                         }

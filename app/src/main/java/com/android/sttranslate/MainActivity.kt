@@ -97,14 +97,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun RTranslatorStyleScreen() {
     // 狀態管理
-    var sourceLangCode by remember { mutableStateOf("en") }
-    var targetLangCode by remember { mutableStateOf("zh-TW") }
+    val context = LocalContext.current
+    var sourceLangCode by remember { mutableStateOf(LanguagePreferences.getSourceLanguage(context)) }
+    var targetLangCode by remember { mutableStateOf(LanguagePreferences.getTargetLanguage(context)) }
     var inputText by remember { mutableStateOf("") }
     var resultText by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
     // 翻譯邏輯
@@ -130,16 +130,29 @@ fun RTranslatorStyleScreen() {
             LanguageSelectionBar(
                 sourceLang = sourceLangCode,
                 targetLang = targetLangCode,
-                onSourceClick = { sourceLangCode = it },
-                onTargetClick = { targetLangCode = it },
+                onSourceClick = { newCode ->
+                    sourceLangCode = newCode
+                    LanguagePreferences.saveSourceLanguage(context, newCode)
+                },
+                onTargetClick = { newCode ->
+                    targetLangCode = newCode
+                    LanguagePreferences.saveTargetLanguage(context, newCode)
+                },
                 onSwap = {
                     if (sourceLangCode == "auto") {
-                        sourceLangCode = targetLangCode; targetLangCode = "en"
+                        sourceLangCode = targetLangCode
+                        targetLangCode = "en"
                     } else {
-                        val temp = sourceLangCode; sourceLangCode = targetLangCode; targetLangCode = temp
+                        val temp = sourceLangCode
+                        sourceLangCode = targetLangCode
+                        targetLangCode = temp
                     }
+                    LanguagePreferences.saveSourceLanguage(context, sourceLangCode)
+                    LanguagePreferences.saveTargetLanguage(context, targetLangCode)
+
                     if (resultText.isNotBlank()) {
-                        inputText = resultText; resultText = ""
+                        inputText = resultText
+                        resultText = ""
                     }
                 }
             )
