@@ -1,6 +1,6 @@
 # Translate
 
-**Translate** is a lightweight Google Translate alternative.
+**Translate** is a super lightweight translate application.
 
 ## Features
 
