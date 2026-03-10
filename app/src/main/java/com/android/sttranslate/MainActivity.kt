@@ -33,8 +33,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.CompareArrows
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.CompareArrows
 import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.ButtonDefaults
@@ -139,21 +139,16 @@ fun RTranslatorStyleScreen() {
                     LanguagePreferences.saveTargetLanguage(context, newCode)
                 },
                 onSwap = {
-                    if (sourceLangCode == "auto") {
-                        sourceLangCode = targetLangCode
-                        targetLangCode = "en"
-                    } else {
-                        val temp = sourceLangCode
-                        sourceLangCode = targetLangCode
-                        targetLangCode = temp
-                    }
-                    LanguagePreferences.saveSourceLanguage(context, sourceLangCode)
-                    LanguagePreferences.saveTargetLanguage(context, targetLangCode)
+                    val swapped = swapLanguages(sourceLangCode, targetLangCode)
+                    sourceLangCode = swapped.source
+                    targetLangCode = swapped.target
 
                     if (resultText.isNotBlank()) {
                         inputText = resultText
                         resultText = ""
                     }
+                    LanguagePreferences.saveSourceLanguage(context, sourceLangCode)
+                    LanguagePreferences.saveTargetLanguage(context, targetLangCode)
                 }
             )
         },
@@ -204,8 +199,8 @@ fun InputArea(
     onTranslate: () -> Unit,
     onClear: () -> Unit
 ) {
-    val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
 
     Box(
         modifier = modifier
@@ -245,9 +240,13 @@ fun InputArea(
         ) {
             FilledTonalButton(
                 onClick = {
+                    // 2. 現在在這裡使用，它是安全的
                     val clipData = clipboardManager.getText()
-                    if (clipData != null) onValueChange(clipData.text)
-                    else Toast.makeText(context, context.getString(R.string.clipboard_empty), Toast.LENGTH_SHORT).show()
+                    if (clipData != null) {
+                        onValueChange(clipData.text)
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.clipboard_empty), Toast.LENGTH_SHORT).show()
+                    }
                 },
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
             ) {
@@ -278,8 +277,8 @@ fun ResultArea(
     resultText: String,
     isLoading: Boolean
 ) {
-    val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
 
     Box(
         modifier = modifier
@@ -349,7 +348,7 @@ fun LanguageSelectionBar(
 
             IconButton(onClick = onSwap) {
                 Icon(
-                    imageVector = Icons.Default.CompareArrows,
+                    imageVector = Icons.AutoMirrored.Filled.CompareArrows,
                     contentDescription = "Swap Languages",
                     modifier = Modifier.size(18.dp),
                     tint = MaterialTheme.colorScheme.onSurface

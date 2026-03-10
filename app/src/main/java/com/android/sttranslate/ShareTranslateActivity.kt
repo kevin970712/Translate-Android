@@ -27,7 +27,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CompareArrows
+import androidx.compose.material.icons.automirrored.filled.CompareArrows
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.Card
@@ -112,6 +112,7 @@ fun TranslateDialogCard(
 ) {
     // 狀態
     val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
     var sourceLangCode by remember { mutableStateOf(LanguagePreferences.getSourceLanguage(context)) }
     var targetLangCode by remember { mutableStateOf(LanguagePreferences.getTargetLanguage(context)) }
     var resultText by remember { mutableStateOf("") }
@@ -122,7 +123,6 @@ fun TranslateDialogCard(
     var isTargetMenuExpanded by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
-    val clipboardManager = LocalClipboardManager.current
 
     // 翻譯邏輯
     fun doTranslate(source: String, target: String) {
@@ -228,18 +228,18 @@ fun TranslateDialogCard(
                         // 交換按鈕
                         IconButton(
                             onClick = {
-                                if (sourceLangCode == "auto") {
-                                    sourceLangCode = targetLangCode; targetLangCode = "en"
-                                } else {
-                                    val temp = sourceLangCode; sourceLangCode = targetLangCode; targetLangCode = temp
-                                }
+                                val swapped = swapLanguages(sourceLangCode, targetLangCode)
+                                sourceLangCode = swapped.source
+                                targetLangCode = swapped.target
+
                                 LanguagePreferences.saveSourceLanguage(context, sourceLangCode)
                                 LanguagePreferences.saveTargetLanguage(context, targetLangCode)
+
                                 doTranslate(sourceLangCode, targetLangCode)
                             }
                         ) {
                             Icon(
-                                imageVector = Icons.Default.CompareArrows,
+                                imageVector = Icons.AutoMirrored.Filled.CompareArrows,
                                 contentDescription = "Swap",
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -248,7 +248,8 @@ fun TranslateDialogCard(
                         // 複製原文按鈕
                         IconButton(
                             onClick = {
-                                clipboardManager.setText(AnnotatedString(inputText))
+                                clipboardManager.setText(AnnotatedString(resultText))
+
                                 Toast.makeText(context, context.getString(R.string.copied), Toast.LENGTH_SHORT).show()
                             }
                         ) {
@@ -322,6 +323,7 @@ fun TranslateDialogCard(
                         onClick = {
                             if (resultText.isNotEmpty()) {
                                 clipboardManager.setText(AnnotatedString(resultText))
+
                                 Toast.makeText(context, context.getString(R.string.copied), Toast.LENGTH_SHORT).show()
                             }
                         }

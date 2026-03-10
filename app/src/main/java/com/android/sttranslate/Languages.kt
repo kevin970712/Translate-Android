@@ -1,4 +1,14 @@
 package com.android.sttranslate
+
+data class LanguagePair(val source: String, val target: String)
+
+fun swapLanguages(source: String, target: String): LanguagePair {
+    return if (source == "auto") {
+        LanguagePair(target, "en")
+    } else {
+        LanguagePair(target, source)
+    }
+}
 val SUPPORTED_LANGUAGES: Map<String, Int> = mapOf(
     "auto" to R.string.lang_detect,
     "zh-TW" to R.string.lang_zh_tw,
