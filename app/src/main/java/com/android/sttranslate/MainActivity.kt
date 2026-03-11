@@ -172,7 +172,7 @@ fun RTranslatorStyleScreen() {
                 .padding(top = paddingValues.calculateTopPadding())
         ) {
             InputArea(
-                modifier = Modifier.weight(0.3f),
+                modifier = Modifier.weight(0.4f),
                 inputText = inputText,
                 onValueChange = { inputText = it },
                 onTranslate = { performTranslate() },
@@ -182,7 +182,7 @@ fun RTranslatorStyleScreen() {
             HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
             ResultArea(
-                modifier = Modifier.weight(0.7f),
+                modifier = Modifier.weight(0.6f),
                 resultText = resultText,
                 isLoading = isLoading
             )
@@ -219,7 +219,7 @@ fun InputArea(
             },
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 0.dp, end = 0.dp, top = 16.dp, bottom = 70.dp),
+                .padding(start = 0.dp, end = 0.dp, top = 8.dp, bottom = 60.dp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
@@ -298,13 +298,13 @@ fun ResultArea(
             modifier = Modifier
                 .fillMaxSize()
                 .navigationBarsPadding()
-                .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 24.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             if (resultText.isEmpty() && !isLoading) {
                 Text(
                     text = stringResource(R.string.translation_empty),
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                 )
             } else {
