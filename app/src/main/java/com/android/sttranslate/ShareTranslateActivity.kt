@@ -65,8 +65,14 @@ class ShareTranslateActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.auto(Color.Transparent.toArgb(), Color.Transparent.toArgb()),
-            navigationBarStyle = SystemBarStyle.auto(Color.Transparent.toArgb(), Color.Transparent.toArgb())
+            statusBarStyle = SystemBarStyle.auto(
+                Color.Transparent.toArgb(),
+                Color.Transparent.toArgb()
+            ),
+            navigationBarStyle = SystemBarStyle.auto(
+                Color.Transparent.toArgb(),
+                Color.Transparent.toArgb()
+            )
         )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false
@@ -129,9 +135,10 @@ fun TranslateDialogCard(
         isLoading = true
         scope.launch {
             try {
-                val response = NetworkModule.api.translate(source = source, target = target, query = inputText)
+                val response =
+                    NetworkModule.api.translate(source = source, target = target, query = inputText)
                 resultText = response.translatedText
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 resultText = context.getString(R.string.error_connection)
             } finally {
                 isLoading = false
@@ -202,7 +209,9 @@ fun TranslateDialogCard(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = stringResource(SUPPORTED_LANGUAGES[sourceLangCode] ?: R.string.lang_detect),
+                                text = stringResource(
+                                    SUPPORTED_LANGUAGES[sourceLangCode] ?: R.string.lang_detect
+                                ),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -217,7 +226,13 @@ fun TranslateDialogCard(
                             SUPPORTED_LANGUAGES.forEach { (code, nameResId) ->
                                 DropdownMenuItem(
                                     text = { Text(stringResource(nameResId)) },
-                                    onClick = { sourceLangCode = code; isSourceMenuExpanded = false; LanguagePreferences.saveSourceLanguage(context, code); doTranslate(sourceLangCode, targetLangCode) }
+                                    onClick = {
+                                        sourceLangCode = code; isSourceMenuExpanded =
+                                        false; LanguagePreferences.saveSourceLanguage(
+                                        context,
+                                        code
+                                    ); doTranslate(sourceLangCode, targetLangCode)
+                                    }
                                 )
                             }
                         }
@@ -250,7 +265,11 @@ fun TranslateDialogCard(
                             onClick = {
                                 clipboardManager.setText(AnnotatedString(resultText))
 
-                                Toast.makeText(context, context.getString(R.string.copied), Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.copied),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         ) {
                             Icon(
@@ -296,7 +315,9 @@ fun TranslateDialogCard(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = stringResource(SUPPORTED_LANGUAGES[targetLangCode] ?: R.string.lang_zh_tw),
+                                text = stringResource(
+                                    SUPPORTED_LANGUAGES[targetLangCode] ?: R.string.lang_zh_tw
+                                ),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -312,7 +333,13 @@ fun TranslateDialogCard(
                                 if (code == "auto") return@forEach
                                 DropdownMenuItem(
                                     text = { Text(stringResource(nameResId)) },
-                                    onClick = { targetLangCode = code; isTargetMenuExpanded = false; LanguagePreferences.saveTargetLanguage(context, code); doTranslate(sourceLangCode, targetLangCode) }
+                                    onClick = {
+                                        targetLangCode = code; isTargetMenuExpanded =
+                                        false; LanguagePreferences.saveTargetLanguage(
+                                        context,
+                                        code
+                                    ); doTranslate(sourceLangCode, targetLangCode)
+                                    }
                                 )
                             }
                         }
@@ -324,7 +351,11 @@ fun TranslateDialogCard(
                             if (resultText.isNotEmpty()) {
                                 clipboardManager.setText(AnnotatedString(resultText))
 
-                                Toast.makeText(context, context.getString(R.string.copied), Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.copied),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     ) {

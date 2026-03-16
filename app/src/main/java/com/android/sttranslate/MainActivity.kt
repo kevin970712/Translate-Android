@@ -7,17 +7,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -25,16 +19,16 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.CompareArrows
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.ButtonDefaults
@@ -42,7 +36,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -51,8 +44,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -68,25 +59,39 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.android.sttranslate.ui.theme.STTranslateTheme
 import kotlinx.coroutines.launch
 
+object UIConfig {
+    val HorizontalStart = 12.dp  // 左側文字起點
+    val IconAreaWidth = 56.dp    // 右側 Icon 的寬度
+    val VerticalPadding = 12.dp  // 上下間距
+}
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.auto(Color.Transparent.toArgb(), Color.Transparent.toArgb()),
-            navigationBarStyle = SystemBarStyle.auto(Color.Transparent.toArgb(), Color.Transparent.toArgb())
+            statusBarStyle = SystemBarStyle.auto(
+                Color.Transparent.toArgb(),
+                Color.Transparent.toArgb()
+            ),
+            navigationBarStyle = SystemBarStyle.auto(
+                Color.Transparent.toArgb(),
+                Color.Transparent.toArgb()
+            )
         )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false
         }
         setContent {
             STTranslateTheme {
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
                     RTranslatorStyleScreen()
                 }
             }
@@ -96,7 +101,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun RTranslatorStyleScreen() {
-    // 狀態管理
     val context = LocalContext.current
     var sourceLangCode by remember { mutableStateOf(LanguagePreferences.getSourceLanguage(context)) }
     var targetLangCode by remember { mutableStateOf(LanguagePreferences.getTargetLanguage(context)) }
@@ -107,17 +111,24 @@ fun RTranslatorStyleScreen() {
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
 
-    // 翻譯邏輯
     fun performTranslate() {
         if (inputText.isBlank()) return
         focusManager.clearFocus()
         isLoading = true
         scope.launch {
             try {
-                val response = NetworkModule.api.translate(source = sourceLangCode, target = targetLangCode, query = inputText)
+                val response = NetworkModule.api.translate(
+                    source = sourceLangCode,
+                    target = targetLangCode,
+                    query = inputText
+                )
                 resultText = response.translatedText
-            } catch (e: Exception) {
-                Toast.makeText(context, context.getString(R.string.error_connection), Toast.LENGTH_SHORT).show()
+            } catch (_: Exception) {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.error_connection),
+                    Toast.LENGTH_SHORT
+                ).show()
             } finally {
                 isLoading = false
             }
@@ -125,44 +136,39 @@ fun RTranslatorStyleScreen() {
     }
 
     Scaffold(
-        contentWindowInsets = WindowInsets.systemBars,
         topBar = {
             LanguageSelectionBar(
                 sourceLang = sourceLangCode,
                 targetLang = targetLangCode,
-                onSourceClick = { newCode ->
-                    sourceLangCode = newCode
-                    LanguagePreferences.saveSourceLanguage(context, newCode)
+                onSourceClick = {
+                    sourceLangCode = it; LanguagePreferences.saveSourceLanguage(
+                    context,
+                    it
+                )
                 },
-                onTargetClick = { newCode ->
-                    targetLangCode = newCode
-                    LanguagePreferences.saveTargetLanguage(context, newCode)
+                onTargetClick = {
+                    targetLangCode = it; LanguagePreferences.saveTargetLanguage(
+                    context,
+                    it
+                )
                 },
                 onSwap = {
                     val swapped = swapLanguages(sourceLangCode, targetLangCode)
                     sourceLangCode = swapped.source
                     targetLangCode = swapped.target
-
                     if (resultText.isNotBlank()) {
-                        inputText = resultText
-                        resultText = ""
+                        inputText = resultText; resultText = ""
                     }
-                    LanguagePreferences.saveSourceLanguage(context, sourceLangCode)
-                    LanguagePreferences.saveTargetLanguage(context, targetLangCode)
                 }
             )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { performTranslate() },
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             ) {
-                if (isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
-                } else {
-                    Icon(imageVector = Icons.Default.Translate, contentDescription = "Translate")
-                }
+                if (isLoading) CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                else Icon(Icons.Default.Translate, contentDescription = null)
             }
         }
     ) { paddingValues ->
@@ -179,139 +185,129 @@ fun RTranslatorStyleScreen() {
                 onClear = { inputText = ""; resultText = "" }
             )
 
-            HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outlineVariant)
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth(0.2f) // 縮短為螢幕寬度的 20%
+                    .align(Alignment.CenterHorizontally),
+                thickness = 2.dp,
+                color = MaterialTheme.colorScheme.outlineVariant
+            )
 
             ResultArea(
                 modifier = Modifier.weight(0.6f),
-                resultText = resultText,
-                isLoading = isLoading
+                resultText = resultText
             )
         }
     }
 }
 
-// === 獨立的輸入區元件 ===
 @Composable
 fun InputArea(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     inputText: String,
     onValueChange: (String) -> Unit,
     onTranslate: () -> Unit,
     onClear: () -> Unit
 ) {
-    val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
 
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        TextField(
+    Box(modifier = modifier
+        .fillMaxWidth()
+        .background(MaterialTheme.colorScheme.surface)) {
+        BasicTextField(
             value = inputText,
             onValueChange = onValueChange,
-            placeholder = {
-                Text(
-                    text = stringResource(R.string.input_placeholder),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                )
-            },
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 0.dp, end = 0.dp, top = 8.dp, bottom = 60.dp),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            ),
-            textStyle = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Normal),
+                .padding(
+                    start = UIConfig.HorizontalStart,
+                    end = UIConfig.IconAreaWidth,
+                    top = UIConfig.VerticalPadding,
+                    bottom = UIConfig.VerticalPadding
+                ),
+            textStyle = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.onSurface),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { onTranslate() })
+            keyboardActions = KeyboardActions(onDone = { onTranslate() }),
+            decorationBox = { innerTextField ->
+                if (inputText.isEmpty()) {
+                    Text(
+                        stringResource(R.string.input_placeholder),
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    )
+                }
+                innerTextField()
+            }
         )
 
-        Row(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            FilledTonalButton(
-                onClick = {
-                    // 2. 現在在這裡使用，它是安全的
-                    val clipData = clipboardManager.getText()
-                    if (clipData != null) {
-                        onValueChange(clipData.text)
-                    } else {
-                        Toast.makeText(context, context.getString(R.string.clipboard_empty), Toast.LENGTH_SHORT).show()
-                    }
-                },
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-                Icon(imageVector = Icons.Default.ContentPaste, contentDescription = null, modifier = Modifier.size(18.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(stringResource(R.string.action_paste))
+        Column(modifier = Modifier
+            .align(Alignment.TopEnd)
+            .padding(end = 4.dp)) {
+            IconButton(onClick = {
+                clipboardManager.getText()?.let { onValueChange(it.text) }
+            }) {
+                Icon(
+                    Icons.Default.ContentPaste,
+                    contentDescription = stringResource(R.string.action_paste),
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
-
             if (inputText.isNotEmpty()) {
-                FilledTonalButton(
-                    onClick = onClear,
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-                ) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.action_clear))
+                IconButton(onClick = onClear) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = stringResource(R.string.action_clear),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
         }
     }
 }
 
-// === 獨立的結果區元件 ===
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ResultArea(
-    modifier: Modifier = Modifier,
-    resultText: String,
-    isLoading: Boolean
-) {
-    val context = LocalContext.current
+fun ResultArea(modifier: Modifier, resultText: String) {
     val clipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
 
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .combinedClickable(
-                onClick = { },
-                onLongClick = {
-                    if (resultText.isNotEmpty()) {
-                        clipboardManager.setText(AnnotatedString(resultText))
-                        Toast.makeText(context, context.getString(R.string.copied), Toast.LENGTH_SHORT).show()
-                    }
-                }
-            )
-    ) {
+    Box(modifier = modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .navigationBarsPadding()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
+                .padding(
+                    start = UIConfig.HorizontalStart,
+                    end = UIConfig.IconAreaWidth,
+                    top = UIConfig.VerticalPadding,
+                    bottom = UIConfig.VerticalPadding
+                )
                 .verticalScroll(rememberScrollState())
         ) {
-            if (resultText.isEmpty() && !isLoading) {
-                Text(
-                    text = stringResource(R.string.translation_empty),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+            Text(
+                text = resultText.ifEmpty { stringResource(R.string.translation_empty) },
+                style = MaterialTheme.typography.headlineSmall,
+                color = if (resultText.isEmpty()) MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                    alpha = 0.5f
                 )
-            } else {
-                Text(
-                    text = resultText,
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                else MaterialTheme.colorScheme.onSurface
+            )
+        }
+
+        if (resultText.isNotEmpty()) {
+            IconButton(
+                onClick = {
+                    clipboardManager.setText(AnnotatedString(resultText))
+                    Toast.makeText(context, context.getString(R.string.copied), Toast.LENGTH_SHORT)
+                        .show()
+                },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 4.dp, end = 4.dp)
+            ) {
+                Icon(
+                    Icons.Default.ContentCopy,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -340,7 +336,9 @@ fun LanguageSelectionBar(
         ) {
             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                 LanguagePickerButton(
-                    currentLangName = stringResource(SUPPORTED_LANGUAGES[sourceLang] ?: R.string.lang_detect),
+                    currentLangName = stringResource(
+                        SUPPORTED_LANGUAGES[sourceLang] ?: R.string.lang_detect
+                    ),
                     isSource = true,
                     onLangSelected = onSourceClick
                 )
@@ -357,7 +355,9 @@ fun LanguageSelectionBar(
 
             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                 LanguagePickerButton(
-                    currentLangName = stringResource(SUPPORTED_LANGUAGES[targetLang] ?: R.string.lang_zh_tw),
+                    currentLangName = stringResource(
+                        SUPPORTED_LANGUAGES[targetLang] ?: R.string.lang_zh_tw
+                    ),
                     isSource = false,
                     onLangSelected = onTargetClick
                 )
@@ -382,7 +382,9 @@ fun LanguagePickerButton(
                 containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 contentColor = MaterialTheme.colorScheme.primary
             ),
-            modifier = Modifier.padding(5.dp).fillMaxWidth()
+            modifier = Modifier
+                .padding(5.dp)
+                .fillMaxWidth()
         ) {
             Text(
                 text = currentLangName,

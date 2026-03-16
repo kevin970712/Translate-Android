@@ -9,6 +9,7 @@ fun swapLanguages(source: String, target: String): LanguagePair {
         LanguagePair(target, source)
     }
 }
+
 val SUPPORTED_LANGUAGES: Map<String, Int> = mapOf(
     "auto" to R.string.lang_detect,
     "zh-TW" to R.string.lang_zh_tw,
