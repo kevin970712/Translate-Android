@@ -1,11 +1,9 @@
 package com.android.sttranslate
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
@@ -51,7 +49,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -64,19 +61,7 @@ class ShareTranslateActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.auto(
-                Color.Transparent.toArgb(),
-                Color.Transparent.toArgb()
-            ),
-            navigationBarStyle = SystemBarStyle.auto(
-                Color.Transparent.toArgb(),
-                Color.Transparent.toArgb()
-            )
-        )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            window.isNavigationBarContrastEnforced = false
-        }
+        enableEdgeToEdge()
 
         // 獲取分享文字
         val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT) ?: ""
