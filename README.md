@@ -10,8 +10,7 @@
 *   **Support 21 commonly used languages:** Chinese (Traditional), Chinese (Simplified), English, Japanese, Korean, French, German, Spanish, Italian, Russian, Portuguese, Vietnamese, Thai, Indonesian, Malay, Arabic, Hindi, Turkish, Ukrainian, Dutch, Polish
     
 ## Screenshots
-<img src="screenshots/home.png" width=30%/>
-<img src="screenshots/share.png" width=30%/>
+<img src="screenshots/home.png" width=40%/> <img src="screenshots/share.png" width=40%/>
 
 ## Special thanks
 **[Translate you](https://github.com/you-apps/TranslateYou)** provided me with a lot of development inspiration
