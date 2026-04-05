@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Theme.Translate" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:windowSplashScreenBackground">#1C323F</item>
+        <item name="android:windowBackground">@color/splash_background</item>
     </style>
 
 </resources>
